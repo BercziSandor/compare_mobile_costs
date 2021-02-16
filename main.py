@@ -33,21 +33,21 @@ class Tarifa:
             data = json.load(file)
         return [Tarifa(e) for e in data["tarifak"]]
 
-    def __init__(self, kwargs):
-        # print("kwargs: " + str(kwargs))
-        self.desc = kwargs.get("desc", "")
-        if kwargs.get("carrier"):
-            self.carrier = kwargs["carrier"]
+    def __init__(self, params):
+        # print("params: " + str(params))
+        self.desc = params.get("desc", "")
+        if params.get("carrier"):
+            self.carrier = params["carrier"]
         else:
             raise Exception("Carrier not given for tarif {}".format(self.desc))
 
-        self.base = kwargs.get("base", 'perc')
-        self.ingyen_percek = kwargs.get("ingyen_percek", 0)
-        self.alap_dij = int(kwargs["alap_dij"])
-        self.ingyen_percek_sajat = kwargs.get("ingyen_percek_sajat", 0)
-        self.perc_dij = int(kwargs.get("perc_dij", 0))
-        self.netGB = kwargs["netGB"]
-        self.yearMonth = kwargs.get("yearMonth", -1)
+        self.base = params.get("base", 'perc')
+        self.ingyen_percek = params.get("ingyen_percek", 0)
+        self.alap_dij = int(params["alap_dij"])
+        self.ingyen_percek_sajat = params.get("ingyen_percek_sajat", 0)
+        self.perc_dij = int(params.get("perc_dij", 0))
+        self.netGB = params["netGB"]
+        self.yearMonth = params.get("yearMonth", -1)
         self.fizetendo = {}
 
     def __str__(self):
