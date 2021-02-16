@@ -28,6 +28,7 @@ class Tarifa:
 
     @staticmethod
     def load(fle: str):
+        print (f"Loading file {fle}...")
         with open(fle, encoding='utf8') as file:
             data = json.load(file)
         return [Tarifa(e) for e in data["tarifak"]]
@@ -66,6 +67,7 @@ class CallRecord:
 
     @staticmethod
     def load(fle: str):
+        print (f"Loading file {fle}...")
         return [CallRecord(line) for line in reversed(import_csv(fle))]
 
     def __init__(self, dict):
@@ -152,14 +154,15 @@ if __name__ == '__main__':
     input = "Report_2020_Sanyi"
     call_records = CallRecord.load(f'./work/input/{input}.csv')
 
+    print("\nCalculating costs:")
     for tarifa in tarifak:
         # print("\n********************************\nSzerződés: {}({})".format(tarifa.desc, tarifa.carrier))
-        # print(tarifa)
+        print(f" - {tarifa.desc}")
         for cr in call_records:
             # print("\n {}: {} call, len: {} min {}->{}".format(cr.start.strftime('%m.%d %H:%M'), cr.type, cr.hossz_perc, tarifa.carrier, cr.toCarrier))
             cr.get_szamolt_dij(tarifa)
             # print("  Díj: {} Ft".format(cr.szamolt_dij))
-
+    print()
 
     # yms=tarifak[0].fizetendo.keys()
 
@@ -170,8 +173,11 @@ if __name__ == '__main__':
 
     pd.set_option('display.max_columns', None)
     pd.set_option('display.width', None)
+    print("Cumulated costs:")
     print(df)
 
-    excelWriter = pd.ExcelWriter(f'./work/output/{input}.xlsx')
+    xls=f'./work/output/{input}.xlsx'
+    print(f"\nSaving data to file {xls}")
+    excelWriter = pd.ExcelWriter(xls)
     df.to_excel(excelWriter, index=True)
     excelWriter.save()
