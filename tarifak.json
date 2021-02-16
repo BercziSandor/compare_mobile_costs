@@ -1,0 +1,73 @@
+{
+  "tarifak": [
+    {
+      "desc": "DigiMobil+",
+      "carrier": "Digi",
+      "alap_dij": 1000,
+      "netGB": 15,
+      "ingyen_percek": 200,
+      "perc_dij": 4
+    },
+    {
+      "desc": "Telenor S",
+      "carrier": "Telenor",
+      "alap_dij": 5400,
+      "netGB": 3,
+      "ingyen_percek": 100,
+      "ingyen_percek_sajat": 999999999
+    },
+    {
+      "desc": "Talk M",
+      "carrier": "Telenor",
+      "ingyen_percek": 999999999,
+      "alap_dij": 8000,
+      "ingyen_percek_sajat": 9999999999,
+      "netGB": 5
+    },
+    {
+      "desc": "Go Talk+",
+      "carrier": "Vodafone",
+      "alap_dij": 8000,
+      "ingyen_percek": 999999999,
+      "netGB": 2
+    },
+    {
+      "desc": "Telenor XS+",
+      "carrier": "Telenor",
+      "alap_dij": 4000,
+      "ingyen_percek": 100,
+      "netGB": 3,
+      "perc_dij": 40
+    },
+    {
+      "desc": "Go easy",
+      "carrier": "Vodafone",
+      "alap_dij": 4500,
+      "netGB": 15,
+      "perc_dij": 20
+    },
+    {
+      "desc": "Go easy-h",
+      "carrier": "Vodafone",
+      "alap_dij": 4500,
+      "netGB": 10,
+      "perc_dij": 20
+    },
+    {
+      "desc": "Go next",
+      "carrier": "Vodafone",
+      "ingyen_percek": 200,
+      "alap_dij": 6000,
+      "netGB": 3,
+      "perc_dij": 40
+    },
+    {
+      "desc": "Go mini",
+      "carrier": "Vodafone",
+      "ingyen_percek": 100,
+      "alap_dij": 3000,
+      "netGB": 2,
+      "perc_dij": 40
+    }
+  ]
+}
