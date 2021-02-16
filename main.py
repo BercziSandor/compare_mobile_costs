@@ -148,9 +148,9 @@ def import_csv(fle: str):
 
 
 if __name__ == '__main__':
-    tarifak = Tarifa.load("input/tarifak.json")
+    tarifak = Tarifa.load("tarifak.json")
     input = "Report_2020_Sanyi"
-    call_records = CallRecord.load(f'./input/{input}.csv')
+    call_records = CallRecord.load(f'./work/input/{input}.csv')
 
     for tarifa in tarifak:
         # print("\n********************************\nSzerződés: {}({})".format(tarifa.desc, tarifa.carrier))
@@ -172,8 +172,6 @@ if __name__ == '__main__':
     pd.set_option('display.width', None)
     print(df)
 
-    # df.to_csv('output.csv', index = True,sep='\t')
-
-    excelWriter = pd.ExcelWriter(f'{input}.xlsx')
+    excelWriter = pd.ExcelWriter(f'./work/output/{input}.xlsx')
     df.to_excel(excelWriter, index=True)
     excelWriter.save()
