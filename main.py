@@ -2,6 +2,7 @@ import datetime
 import json
 import math
 import pandas as pd
+from typing import List
 
 # https://pypi.org/project/phonenumbers/
 import phonenumbers
@@ -61,7 +62,6 @@ class Tarifa:
         r += f"Mobilnet:                      {self.netGB}GB\n"
         r += f""
         return r
-
 
 class CallRecord:
 
@@ -141,6 +141,10 @@ class CallRecord:
         self.szamolt_dij = fizetendo_perc * perc_dij
         szerzodes.fizetendo[str(szerzodes.yearMonth)] += self.szamolt_dij
         return self.szamolt_dij
+
+class Bill:
+    def __init__(self, tarifa: Tarifa, callRecords: List[CallRecord] ):
+        pass
 
 
 def import_csv(fle: str):
