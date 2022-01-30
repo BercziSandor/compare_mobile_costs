@@ -11,63 +11,60 @@
     {
       "desc": "Telenor S",
       "carrier": "Telenor",
-      "alap_dij": 5400,
+      "alap_dij": 6490,
       "netGB": 3,
       "ingyen_percek": 100,
-      "ingyen_percek_sajat": 999999999
-    },
-    {
-      "desc": "Talk M",
-      "carrier": "Telenor",
-      "ingyen_percek": 999999999,
-      "alap_dij": 8000,
-      "ingyen_percek_sajat": 9999999999,
-      "netGB": 5
-    },
-    {
-      "desc": "Go Talk+",
-      "carrier": "Vodafone",
-      "alap_dij": 8000,
-      "ingyen_percek": 999999999,
-      "netGB": 2
+      "ingyen_percek_sajat": 999999999,
+      "perc_dij": 40
     },
     {
       "desc": "Telenor XS+",
       "carrier": "Telenor",
-      "alap_dij": 4000,
+      "alap_dij": 4490,
       "ingyen_percek": 100,
-      "netGB": 3,
-      "perc_dij": 40
+      "perc_dij": 40,
+      "netGB": 3
     },
     {
-      "desc": "Go easy",
+      "desc": "Talk M",
+      "carrier": "Telenor",
+      "alap_dij": 9500,
+      "ingyen_percek": 999999999,
+      "ingyen_percek_sajat": 9999999999,
+      "netGB": 5
+    },
+    {
+      "desc": "Go Light",
+      "carrier": "Vodafone",
+      "alap_dij": 3500,
+      "ingyen_percek": 130,
+      "perc_dij": 40,
+      "netGB": 2
+    },
+    {
+      "desc": "Go Easy",
       "carrier": "Vodafone",
       "alap_dij": 4500,
-      "netGB": 15,
-      "perc_dij": 20
+      "ingyen_percek": 0,
+      "perc_dij": 20,
+      "netGB": 15
     },
     {
-      "desc": "Go easy-h",
+      "desc": "Go Midi",
       "carrier": "Vodafone",
-      "alap_dij": 4500,
-      "netGB": 10,
-      "perc_dij": 20
-    },
-    {
-      "desc": "Go next",
-      "carrier": "Vodafone",
-      "ingyen_percek": 200,
       "alap_dij": 6000,
-      "netGB": 3,
-      "perc_dij": 40
+      "ingyen_percek": 200,
+      "ingyen_percek_sajat": 99999999,
+      "perc_dij": 40,
+      "netGB": 3
     },
     {
-      "desc": "Go mini",
+      "desc": "Go Super",
       "carrier": "Vodafone",
-      "ingyen_percek": 100,
-      "alap_dij": 3000,
-      "netGB": 2,
-      "perc_dij": 40
+      "alap_dij": 8500,
+      "ingyen_percek": 9999999,
+      "ingyen_percek_sajat": 99999999,
+      "netGB": 3
     }
   ]
 }
