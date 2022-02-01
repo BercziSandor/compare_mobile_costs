@@ -14,7 +14,7 @@
       "alap_dij": 6490,
       "netGB": 3,
       "ingyen_percek": 100,
-      "ingyen_percek_sajat": 999999999,
+      "ingyen_percek_sajat": 99999,
       "perc_dij": 40
     },
     {
@@ -29,8 +29,8 @@
       "desc": "Talk M",
       "carrier": "Telenor",
       "alap_dij": 9500,
-      "ingyen_percek": 999999999,
-      "ingyen_percek_sajat": 9999999999,
+      "ingyen_percek": 99999,
+      "ingyen_percek_sajat": 99999,
       "netGB": 5
     },
     {
@@ -54,7 +54,7 @@
       "carrier": "Vodafone",
       "alap_dij": 6000,
       "ingyen_percek": 200,
-      "ingyen_percek_sajat": 99999999,
+      "ingyen_percek_sajat": 99999,
       "perc_dij": 40,
       "netGB": 3
     },
@@ -62,8 +62,8 @@
       "desc": "Go Super",
       "carrier": "Vodafone",
       "alap_dij": 8500,
-      "ingyen_percek": 9999999,
-      "ingyen_percek_sajat": 99999999,
+      "ingyen_percek": 99999,
+      "ingyen_percek_sajat": 99999,
       "netGB": 3
     }
   ]

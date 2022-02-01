@@ -7,7 +7,7 @@ Input:
  - tarif parameters in JSON format
 
 Mobile providers:
- - [Telenor](https://www.telenor.hu/tarifak)
- - [T-Home](https://www.telekom.hu/webshop/szolgaltatasok/mobil)
- - [Vodafone](https://www.vodafone.hu/mobil-szolgaltatasok)
- - [Digi](https://digi.hu/mobil)
+  - [Digi](https://digi.hu/mobil)
+  - [Telenor](https://www.telenor.hu/tarifak)
+  - [T-Home](https://www.telekom.hu/webshop/szolgaltatasok/mobil)
+  - [Vodafone](https://www.vodafone.hu/mobil-szolgaltatasok)

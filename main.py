@@ -1,18 +1,20 @@
+import argparse
 import datetime
 import json
 import logging
 import math
 import sys
-from typing import List
+from typing import List, Dict
 
 import pandas as pd
 # https://pypi.org/project/phonenumbers/
 import phonenumbers
-from phonenumbers import carrier
+from pandas import DataFrame
+from phonenumbers import carrier, PhoneNumber
 from pytimeparse.timeparse import timeparse
 
 
-def parseNumber(nr: str):
+def parseNumber(nr: str) -> PhoneNumber:
     nr = str(nr)
     # print("Parsing nr [{}]".format(nr))
     if nr.startswith('06'):
@@ -21,14 +23,13 @@ def parseNumber(nr: str):
     # Hordozott szám :(
     if nr == "+36301837880": nr = "+36201837880"
     if nr == 'nan': nr = "+36201837880"  # hidden number
-    n = phonenumbers.parse(nr, region="HU")
-    return n
+    return phonenumbers.parse(nr, region="HU")
 
 
 class Tarifa:
-    yearMonth = -1
-    maradek_ingyen_percek = 0
-    maradek_ingyen_percek_sajat = 0
+    # yearMonth = -1
+    # maradek_ingyen_percek = 0
+    # maradek_ingyen_percek_sajat = 0
 
     # last_cr_date = datetime.datetime.strptime("1970 01 01", "%Y %m %d")
 
@@ -39,25 +40,22 @@ class Tarifa:
             data = json.load(file)
         return [Tarifa(e) for e in data["tarifak"]]
 
-    def __init__(self, params):
+    def __init__(self, params={}):
         # print("params: " + str(params))
         self.desc = params.get("desc", "")
-        if params.get("carrier"):
-            self.carrier = params["carrier"]
-        else:
-            raise Exception("Carrier not given for tarif {}".format(self.desc))
+        self.carrier = params.get("carrier", None)
 
         self.base = params.get("base", 'perc')
+        self.alap_dij = int(params.get("alap_dij", 0))
         self.ingyen_percek = params.get("ingyen_percek", 0)
-        self.alap_dij = int(params["alap_dij"])
         self.ingyen_percek_sajat = params.get("ingyen_percek_sajat", 0)
+        self.ingyen_percek_eu = params.get("ingyen_percek_eu", None)
+
         self.perc_dij = int(params.get("perc_dij", 0))
-        self.netGB = params["netGB"]
-        self.yearMonth = params.get("yearMonth", -1)
-        self.fizetendo = {}
+        self.netGB = int(params.get("netGB", 0))
 
     def __str__(self):
-        r = f"Név:{self.desc},"
+        r = f"Név:{self.desc}\n"
         r += f"Szolg:{self.carrier}\n"
         r += f"Alapdíj:{self.alap_dij}\n"
         r += f"Számlázás alapja:{self.base}\n"
@@ -67,6 +65,15 @@ class Tarifa:
         r += f"Mobilnet: {self.netGB}GB\n"
         r += f""
         return r
+
+    def get_pandas_data(self, type: str = "") -> list:
+        if type == 'header':
+            retval = ['Szolgáltató', 'Alapdíj', 'Számlázás alapja', 'Ingyen percek',
+                      'Ingyen percek hál. belül', 'Ingyen percek EU', 'Percdíj', 'Mobilnet[GB]']
+        else:
+            retval = [self.carrier, self.alap_dij, self.base, self.ingyen_percek,
+                      self.ingyen_percek_sajat, self.ingyen_percek_eu, self.perc_dij, self.netGB]
+        return retval
 
 
 class CallRecord:
@@ -93,6 +100,18 @@ class CallRecord:
             self.toCarrier = 'bla'
         else:
             self.toCarrier = carrier.name_for_number(self.toNumber, 'hu', region="HU")
+        try:
+            self.fromNumber = parseNumber(dict["From Number"])
+        except phonenumbers.phonenumberutil.NumberParseException as err:
+            logging.error(f" Error parsing number [{dict['From Number']}]: {err.args}")
+            self.type = 'ERROR_PARSING_NUMBER'
+            self.fromCarrier = 'bla'
+        else:
+            self.fromCarrier = carrier.name_for_number(self.fromNumber, 'hu', region="HU")
+
+        self.belfoldi_hivas = self.fromNumber.country_code == self.toNumber.country_code
+        self.halozaton_beluli_hivas = self.belfoldi_hivas and (self.fromCarrier == self.toCarrier)
+
         self.id = "0"
 
         f = "{} {}".format(dict["Date"], dict["Time"])
@@ -109,67 +128,6 @@ class CallRecord:
         r += "irány: {},".format(self.type)
         r += "díj: {} Ft,".format(self.szamolt_dij)
         return r
-
-    def get_szamolt_dij(self, tarifa: Tarifa):
-        logging.info(f"get_szamolt_dij({self}, {tarifa.carrier} - {tarifa.desc})")
-        # if self.szamolt_dij is not None:
-        #     logging.info("Már kiszámolva.")
-        #     return self.szamolt_dij
-
-        if tarifa.last_cr_date > self.start:
-            raise Exception(
-                "Error: nem időrendi sorrendben érkeznek be a rekordok, így nem lehet feldolgozni őket.\n{}".format(
-                    self))
-        tarifa.last_cr_date = self.start
-        self.szamolt_dij = 0
-
-        if tarifa.yearMonth != self.yearMonth:
-            # print("*** Új hónap kezdődik! *** {} -> {}".format(tarifa.yearMonth, self.yearMonth))
-            # if tarifa.yearMonth >0: print("Előző havi díj: {}".format(tarifa.fizetendo[str(tarifa.yearMonth)]))
-            tarifa.yearMonth = self.yearMonth
-            tarifa.fizetendo[str(tarifa.yearMonth)] = tarifa.alap_dij
-            tarifa.maradek_ingyen_percek = tarifa.ingyen_percek
-            tarifa.maradek_ingyen_percek_sajat = tarifa.ingyen_percek_sajat
-
-        if self.type != 'Outgoing': return 0
-        if self.hossz_perc == 0: return 0
-        halozaton_belul = tarifa.carrier == self.toCarrier
-        perc_dij = tarifa.perc_dij
-        fizetendo_perc = self.hossz_perc
-
-        if halozaton_belul:
-            logging.info("Ez egy hálózaton belüli hívás.")
-            if tarifa.maradek_ingyen_percek_sajat > 0:
-                if fizetendo_perc <= tarifa.maradek_ingyen_percek_sajat:
-                    # elég a keret
-                    tarifa.maradek_ingyen_percek_sajat = tarifa.maradek_ingyen_percek_sajat - fizetendo_perc
-                    fizetendo_perc = 0
-                    logging.info(
-                        "{} ingyen perc elhasználva, marad még {} ingyen perc saját hálózaton belül.".format(
-                            self.hossz_perc, tarifa.maradek_ingyen_percek_sajat))
-                else:
-                    # nem elég a keret
-                    fizetendo_perc = fizetendo_perc - tarifa.maradek_ingyen_percek_sajat
-                    tarifa.maradek_ingyen_percek_sajat = 0
-                    logging.info(
-                        "{} ingyen perc elhasználva, viszont ezzel elfogyott a saját hálózaton belüli ingyen perc, sőt, még {} elszámolandó.".format(
-                            1, 2))
-
-        if fizetendo_perc > 0:
-            if tarifa.maradek_ingyen_percek > 0:
-                if fizetendo_perc <= tarifa.maradek_ingyen_percek:
-                    tarifa.maradek_ingyen_percek = tarifa.maradek_ingyen_percek - fizetendo_perc
-                    fizetendo_perc = 0
-                    logging.info("Marad még {} ingyen perc".format(tarifa.maradek_ingyen_percek))
-                else:
-                    fizetendo_perc = fizetendo_perc - tarifa.maradek_ingyen_percek
-                    tarifa.maradek_ingyen_percek = 0
-                    logging.info("Ezzel elfogyott az ingyen perc, {} percet fizetni kell.".format(
-                        fizetendo_perc))
-
-        self.szamolt_dij = fizetendo_perc * perc_dij
-        tarifa.fizetendo[str(tarifa.yearMonth)] += self.szamolt_dij
-        return self.szamolt_dij
 
 
 class Bill:
@@ -290,49 +248,100 @@ def import_csv(fle: str):
     return pd.read_csv(fle, dtype=str, delimiter=',').to_dict('records')
 
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARNING)
+class Billing:
+    def __init__(self, tarifak_file: str, call_records_file: str):
+        self.tarifak = Tarifa.load(tarifak_file)
+        self.call_records = CallRecord.load(call_records_file)
+        self.bills: Dict[Bill] = {}
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.width', None)
+        pd.options.display.float_format = '{:.0f}'.format
 
-    tarifak = Tarifa.load("tarifak.json")
-    input = "Report_all_Zita"
+    def create_bills(self):
+        for tarifa in self.tarifak:
+            for call_record in self.call_records:
+                if call_record.yearMonth not in self.bills:
+                    self.bills[call_record.yearMonth] = {}
+
+                if tarifa.desc not in self.bills[call_record.yearMonth]:
+                    self.bills[call_record.yearMonth][tarifa.desc]: Bill = Bill(tarifa=tarifa)
+                b: Bill = self.bills[call_record.yearMonth][tarifa.desc]
+                b.add_call_record(call_record)
+
+        for yearMonth in self.bills:
+            for tarifa in self.bills[yearMonth]:
+                bill: Bill = self.bills[yearMonth][tarifa]
+                bill.get_mindosszesen()
+
+        self._create_pd_data()
+
+    def report_tarifa(self):
+        print("Tarifák:")
+        data = {}
+        header = None
+        for tarifa in self.tarifak:
+            if header is None:
+                header = tarifa.get_pandas_data(type='header')
+            data[f"{tarifa.desc}"] = tarifa.get_pandas_data()
+        df = pd.DataFrame(data, index=header)
+        print(df)
+        print()
+
+    def _create_pd_data(self):
+        data = {}
+        for tarifa in [x.desc for x in self.tarifak]:
+            dd = []
+            for ym in list(self.bills.keys()):
+                bill = self.bills[ym][tarifa]
+                dd.append(bill.get_mindosszesen())
+            data[tarifa] = dd
+        self.df = pd.DataFrame(data, index=list(self.bills.keys()))
+
+    def print_table(self, df: DataFrame, desc="Cumulated costs"):
+        dft = df.copy()
+        dft = dft[sorted(dft.columns)]
+        dft['_Átlag_'] = dft.mean(axis=1)
+        print(dft.sort_values("_Átlag_"))
+        print()
+
+    def report(self):
+        # for tarifa in self.tarifak:
+        # print(tarifa)
+        self.report_tarifa()
+
+        dft = self.df.copy()
+        self.print_table(dft)
+
+        dft = self.df.copy()
+        self.print_table(dft.T)
+
+
+if __name__ == '__main__':
+    print(json.dumps(Tarifa().__dict__, indent=4))
+
     input = "Report_2022-01-29_Sanyi"
     input = "Report_2020_Sanyi"
+    input = "Report_all_Zita"
 
-    call_records = CallRecord.load(f'./work/input/{input}.csv')
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('--tarif_file', '-t',
+                            help='A tarifákat tartalmazó file',
+                            default='tarifak.json')
+    arg_parser.add_argument('--call_records_file', '-c',
+                            help='A híváslista file, amit a Callyzer generált',
+                            default=f'./work/input/{input}.csv')
+    args = arg_parser.parse_args()
+    logging.basicConfig(level=logging.WARNING)
 
-    bills = {}
-    for tarifa in tarifak:
-        for call_record in call_records:
-            if call_record.yearMonth not in bills:
-                bills[call_record.yearMonth] = {}
+    billing = Billing(
+        tarifak_file=args.tarif_file,
+        call_records_file=args.call_records_file
+    )
+    billing.create_bills()
+    billing.report()
 
-            if tarifa.desc not in bills[call_record.yearMonth]:
-                bills[call_record.yearMonth][tarifa.desc]: Bill = Bill(tarifa=tarifa)
-            b: Bill = bills[call_record.yearMonth][tarifa.desc]
-            b.add_call_record(call_record)
-
-    for yearMonth in bills:
-        # print(f"{yearMonth}:")
-        for tarifa in bills[yearMonth]:
-            bill: Bill = bills[yearMonth][tarifa]
-            # print(f" {tarifa}: {bill.get_mindosszesen()}")
-
-    data = {}
-    for tarifa in [x.desc for x in tarifak]:
-        dd = []
-        for ym in list(bills.keys()):
-            bill = bills[ym][tarifa]
-            dd.append(bill.get_mindosszesen())
-        data[tarifa] = dd
-    df = pd.DataFrame(data, index=list(bills.keys()))
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.width', None)
-
-    print("Cumulated costs:")
-    print(df)
-
-    xls = f'./work/output/{input}.xlsx'
-    print(f"\nSaving data to file {xls}")
-    excelWriter = pd.ExcelWriter(xls)
-    df.to_excel(excelWriter, index=True)
-    excelWriter.save()
+    # xls = f'./work/output/{input}.xlsx'
+    # print(f"\nSaving data to file {xls}")
+    # excelWriter = pd.ExcelWriter(xls)
+    # df.to_excel(excelWriter, index=True)
+    # excelWriter.save()
