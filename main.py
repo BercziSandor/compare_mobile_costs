@@ -3,7 +3,9 @@ import datetime
 import json
 import logging
 import math
+import os
 import sys
+from operator import itemgetter
 from typing import List, Dict
 
 import pandas as pd
@@ -81,7 +83,9 @@ class CallRecord:
     @staticmethod
     def load(fle: str):
         logging.info(f"Loading file {fle}...")
-        callRecords = [CallRecord(line) for line in reversed(import_csv(fle))]
+        lines = import_csv(fle)
+        lines = sorted(lines, key=itemgetter('Date Time'))
+        callRecords = [CallRecord(line) for line in lines]
         for i in range(len(callRecords)):
             cr: CallRecord = callRecords[i]
             cr.id = i
@@ -116,9 +120,14 @@ class CallRecord:
 
         f = "{} {}".format(dict["Date"], dict["Time"])
         self.start = datetime.datetime.strptime(f, "%Y-%m-%d %I:%M %p")
+
+        # 2021-01-22 17:49:10
+        self.start = datetime.datetime.strptime(dict["Date Time"], "%Y-%m-%d %H:%M:%S")
         self.epoch = int(self.start.timestamp())
         self.yearMonth = self.start.strftime("%Y.%m")
-        self.end = self.start + datetime.timedelta(0, timeparse(str(dict["Duration"])))
+        dur_sec = int(str(dict["Duration"]))
+        self.end = self.start + datetime.timedelta(seconds=dur_sec)
+
         self.duration = self.end - self.start
         self.hossz_perc = math.ceil(self.duration.seconds / 60)
         self.szamolt_dij = None
@@ -177,7 +186,7 @@ class Bill:
         self.last_cr_date = callRecord.start
         # self.fizetendo[callRecord.id] = 0
 
-        if callRecord.type != 'Outgoing': return 0
+        if callRecord.type.lower() != 'outgoing': return 0
         if callRecord.hossz_perc == 0: return 0
 
         halozaton_belul = self.tarifa.carrier == callRecord.toCarrier
@@ -322,6 +331,8 @@ if __name__ == '__main__':
     input = "Report_2022-01-29_Sanyi"
     input = "Report_2020_Sanyi"
     input = "Report_all_Zita"
+    input = "Z Report 2020"
+    input = "CallyzerBackup_2022-03-20_10_02_04"
 
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--tarif_file', '-t',
@@ -332,6 +343,16 @@ if __name__ == '__main__':
                             default=f'./work/input/{input}.csv')
     args = arg_parser.parse_args()
     logging.basicConfig(level=logging.WARNING)
+
+    if not os.path.exists(args.tarif_file):
+        raise FileExistsError(
+            f"File {args.tarif_file} does not exist, aborting.")
+        sys.exit(0)
+
+    if not os.path.exists(args.call_records_file):
+        raise FileExistsError(
+            f"File {args.call_records_file} does not exist, aborting.")
+        sys.exit(0)
 
     billing = Billing(
         tarifak_file=args.tarif_file,

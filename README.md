@@ -8,6 +8,6 @@ Input:
 
 Mobile providers:
   - [Digi](https://digi.hu/mobil)
-  - [Telenor](https://www.telenor.hu/tarifak)
   - [T-Home](https://www.telekom.hu/webshop/szolgaltatasok/mobil)
   - [Vodafone](https://www.vodafone.hu/mobil-szolgaltatasok)
+  - [Yettel](https://www.yettel.hu/prime-tarifa)
