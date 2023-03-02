@@ -27,7 +27,6 @@ Mobile providers:
 
 |                   | Vodafone<br/>Tuti100 | Telekom<br/>Domino | Yettel |
 |-------------------|---------------------:|-------------------:|-------:|
-| havi lebeszélhető |                    - |                  - |      - |
 | alap percdíj      |                   19 |                 25 |     25 |
 | 1napi korlátlan   |                    - |                500 |    400 |
 | 3napi korlátlan   |                  900 |               1200 |      - |
@@ -38,7 +37,6 @@ Mobile providers:
 
 |                   | Vodafone<br/>Tuti100 | Telekom<br/>Domino | Yettel | 
 |-------------------|---------------------:|-------------------:|-------:|
-| Havi adatkeret GB |                    - |                  - |      - |
 | 1napi 1GB         |                    - |                600 |      - |
 | 1napi korlátlan   |                    - |               1100 |      - |
 | 3napi 3GB         |                    - |               1100 |      - |
