@@ -23,7 +23,7 @@ Mobile providers:
  - 1300Ft/hó
 
 ## Feltöltőkártyák
-Beszélgetés:
+### Beszélgetés:
 
 |                   | Vodafone<br/>Tuti100 | Telekom<br/>Domino | Yettel |
 |-------------------|---------------------:|-------------------:|-------:|
@@ -34,19 +34,19 @@ Beszélgetés:
 | 5napi korlátlan   |                    - |                  - |   1650 |
 | 30napi korlátlan  |                 5000 |                  - |      - |
 
-Mobilnet:
+### Mobilnet:
 
-|                   | Vodafone<br/>Tuti100 |   Telekom<br/>Domino | Yettel | 
-|-------------------|---------------------:|---------------------:|-------:|
-| Havi adatkeret GB |                    - |                    - |      - |
-| 1napi 1GB         |                    - |                  600 |      - |
-| 1napi korlátlan   |                    - |                 1100 |      - |
-| 3napi 3GB         |                    - |                 1100 |      - |
-| 3napi korlátlan   |                    - |                 2100 |      - |
-| 30napi 1GB        |                 1300 |                    - |   1100 |
-| 30napi 3GB        |                    - |                    - |   2500 |
-| 30napi 5GB        |                 2600 |                    - |      - |
-| 9999 napi 5GB     |                    - |                 4000 |      - |
+|                   | Vodafone<br/>Tuti100 | Telekom<br/>Domino | Yettel | 
+|-------------------|---------------------:|-------------------:|-------:|
+| Havi adatkeret GB |                    - |                  - |      - |
+| 1napi 1GB         |                    - |                600 |      - |
+| 1napi korlátlan   |                    - |               1100 |      - |
+| 3napi 3GB         |                    - |               1100 |      - |
+| 3napi korlátlan   |                    - |               2100 |      - |
+| 30napi 1GB        |                 1300 |                  - |   1100 |
+| 30napi 3GB        |                    - |                  - |   2500 |
+| 30napi 5GB        |                 2600 |                  - |      - |
+| 9999 napi 5GB     |                    - |               4000 |      - |
 
 
 ### Telekom: Domino
