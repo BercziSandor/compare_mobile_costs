@@ -40,7 +40,6 @@ Mobilnet:
 | 30napi 1GB       |     1300 |         |   1100 |
 | 30napi 3GB       |          |         |   2500 |
 | 30napi 5GB       |     2600 |         |        |
-| 30napi korlátlan |          |         |        |
 | 9999 napi 5GB    |          |    4000 |        |
 
 
