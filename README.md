@@ -15,32 +15,38 @@ Mobile providers:
 
 
 # 2023.03
+## Előfizetés
+### DIGI: Digimobil Plus
+ - havi adatkeret: 15GB
+ - 200perc lebeszélhető
+ - 4Ft/perc
+ - 1300Ft/hó
+
 ## Feltöltőkártyák
-
-
 Beszélgetés:
 
-|                  | Vodafone | Telekom | Yettel |
-|------------------|---------:|--------:|-------:|
-| alap percdíj     |       19 |      25 |     25 |
-| 1napi korlátlan  |        - |     500 |    400 |
-| 3napi korlátlan  |      900 |    1200 |      - |
-| 5napi korlátlan  |        - |       - |   1650 |
-| 30napi korlátlan |     5000 |       - |      - |
+|                   | Vodafone<br/>Tuti100 | Telekom<br/>Domino | Yettel |
+|-------------------|---------------------:|-------------------:|-------:|
+| havi lebeszélhető |                    - |                  - |      - |
+| alap percdíj      |                   19 |                 25 |     25 |
+| 1napi korlátlan   |                    - |                500 |    400 |
+| 3napi korlátlan   |                  900 |               1200 |      - |
+| 5napi korlátlan   |                    - |                  - |   1650 |
+| 30napi korlátlan  |                 5000 |                  - |      - |
 
 Mobilnet:
 
-|                  | Vodafone | Telekom | Yettel |
-|------------------|---------:|--------:|-------:|
-| 1napi 1GB        |          |     600 |        |
-| 1napi korlátlan  |          |    1100 |        |
-| 3napi 3GB        |          |    1100 |        |
-| 3napi korlátlan  |          |    2100 |        |
-| 5napi korlátlan  |          |         |        |
-| 30napi 1GB       |     1300 |         |   1100 |
-| 30napi 3GB       |          |         |   2500 |
-| 30napi 5GB       |     2600 |         |        |
-| 9999 napi 5GB    |          |    4000 |        |
+|                   | Vodafone<br/>Tuti100 |   Telekom<br/>Domino | Yettel | 
+|-------------------|---------------------:|---------------------:|-------:|
+| Havi adatkeret GB |                    - |                    - |      - |
+| 1napi 1GB         |                    - |                  600 |      - |
+| 1napi korlátlan   |                    - |                 1100 |      - |
+| 3napi 3GB         |                    - |                 1100 |      - |
+| 3napi korlátlan   |                    - |                 2100 |      - |
+| 30napi 1GB        |                 1300 |                    - |   1100 |
+| 30napi 3GB        |                    - |                    - |   2500 |
+| 30napi 5GB        |                 2600 |                    - |      - |
+| 9999 napi 5GB     |                    - |                 4000 |      - |
 
 
 ### Telekom: Domino
@@ -57,7 +63,8 @@ Mobilnet:
    - 1200Ft/9999perc (3 nap) (48 perc)
 
 ### Vodafone: Tuti 100
- - [link](https://www.vodafone.hu/extrak-kiegeszitok/feltoltokartyas-opciok)
+ - [tuti100](https://www.vodafone.hu/shop/tarifak/mobil/tuti100) / 
+   [feltoltokartyas-opciok](https://www.vodafone.hu/extrak-kiegeszitok/feltoltokartyas-opciok)
  - 19Ft/perc
  - net:
    - 1300Ft/1GB (30 nap)
