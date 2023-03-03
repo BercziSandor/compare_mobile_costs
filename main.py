@@ -191,7 +191,7 @@ class Bill:
         mins_to_pay = callRecord.hossz_perc
 
         if is_net_intern:
-            logging.info("Ihis is a network-intern call.")
+            logging.info("This is a network-intern call.")
             if self.remainig_free_mins_net_intern > 0:
                 if mins_to_pay <= self.remainig_free_mins_net_intern:
                     # elég a keret
@@ -201,8 +201,8 @@ class Bill:
                         mins_to_pay
                     mins_to_pay = 0
                     logging.info(
-                        "{} ingyen perc elhasználva, marad még {} ingyen perc saját hálózaton belül.".format(
-                            callRecord.hossz_perc, self.remainig_free_mins_net_intern))
+                        f"Already consumed {callRecord.hossz_perc} network-intern free mins, "
+                        f"remaining {self.remainig_free_mins_net_intern} mins.")
                 else:
                     # nem elég a keret
                     mins_to_pay = mins_to_pay - self.remainig_free_mins_net_intern
